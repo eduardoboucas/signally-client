@@ -1,12 +1,17 @@
-const sha1 = require('sha1')
-const socket = require('socket.io-client')('http://localhost:3123')
-const deviceId = sha1('0000000078a7f116')
+const deviceId = require('./lib/device-id')
+const Light = require('./lib/light')
+//const socket = require('socket.io-client')('http://macbook.local:3123')
+const socket = require('socket.io-client')('https://tlights.herokuapp.com')
+
+const light = new Light(deviceId)
 
 socket
   .on('connect', () => {
     console.log('Connect')
 
-    socket.emit('register', deviceId)
+    light.initialise().then(() => {
+      socket.emit('register', deviceId)
+    })
   })
   .on('disconnect', () => {
     console.log('Disconnect')
@@ -17,5 +22,18 @@ socket
   .on('getState', requestId => {
     console.log('getState:', requestId)
 
-    socket.emit('state', requestId, Date.now().toString())
+    const state = light.getState()
+
+    console.log(state)
+
+    socket.emit('state', requestId, JSON.stringify(state))
+  })
+  .on('setState', (requestId, state) => {
+    console.log('setState:', requestId, state)
+
+    light.setState({
+      amber: state.amber,
+      green: state.green,
+      red: state.red
+    })
   })

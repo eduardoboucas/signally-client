@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "rpi-gpio": "^2.1.2",
     "sha1": "^1.1.1",
     "socket.io-client": "^2.2.0"
   }
