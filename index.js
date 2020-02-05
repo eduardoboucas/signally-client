@@ -1,7 +1,6 @@
 const deviceId = require('./lib/device-id')
 const Light = require('./lib/light')
-//const socket = require('socket.io-client')('http://macbook.local:3123')
-const socket = require('socket.io-client')('https://tlights.herokuapp.com')
+const socket = require('socket.io-client')(process.env.SERVER_URL)
 
 const light = new Light(deviceId)
 
